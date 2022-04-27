@@ -4,41 +4,34 @@
 grammar Frontend;
 
 // Rules
-start : line (NL line)* EOF ;
+start : funcDef (funcDef)* EOF ;
 
-line : funcDef
-  | prototype
-  | func
-  | EOF
-  ;
+// Function Rules
+funcDef : (INT|VOID) SPACE NAME (SPACE)? '(' (INT|VOID) SPACE NAME (SPACE)? ')' (';'|(block)+);
 
-prototype :  func ';' ;
+funcCall : NAME '(' (NAME | NUMBER| VOID)* ')' ;
 
-funcDef : func (NL)* '{' (ifStmt | varDec | elseStmt | assignment | funcCall)+ '}' ;
+// Other Rules (things inside functions)
 
-func : INT SPACE FUNCNAME (SPACE)* '(' (varDec|VOID) ')'
-  | VOID SPACE FUNCNAME (SPACE)* '(' (varDec|VOID) ')'
-  ;
+block : '{' (funcCall | varDec| ifStmt| elseStmt | assignment)+ '}' ;
 
-funcCall : FUNCNAME '(' (VARIABLE | NUMBER| VOID)* ')' ;
+varDec : INT SPACE NAME (SPACE)* ';' ;
 
-varDec : INT SPACE VARIABLE (SPACE)* ';' ;
+ifStmt : 'if' (SPACE)* '(' ')' (SPACE)* '{' (block)+ '}' ;
 
-ifStmt : 'if' (SPACE)* '(' ')' (SPACE)* '{' (line)+ '}' ;
+elseStmt : 'else' (SPACE)* '{' (block)+ '}' ;
 
-elseStmt : 'else' (SPACE)* '{' (line)+ '}' ;
-
-assignment : VARIABLE (SPACE)? '=' (SPACE)? (NUMBER|VARIABLE|funcDef) ';' ;
+assignment : NAME (SPACE)? '=' (SPACE)? (NUMBER|NAME|funcCall) ';' ;
 
 
 // Tokens
-INT : 'int' ;
-VOID : 'void' ;
-VARIABLE : [a-zA-Z][a-zA-Z0-9_-]* ;
-FUNCNAME : [a-zA-Z_]+ ;
+INT : ('int') ;
+VOID : ('void') ;
+DATATYPE : INT | VOID ;
+NAME : [a-z][a-zA-Z0-9_-]* ;
 NUMBER : [0-9]+ ;
 SPACE : [ \t]+ ;
-NL : [\r\n]+ ;
 UOP : [\-] ;
 BINOP : [+\-*/] ;
 COP : ('>') | ('<') | ('<=') | ('>=') | ('==') | ('!=') ;
+NL : [\r\n]+ -> skip ;
