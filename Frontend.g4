@@ -21,22 +21,31 @@ elseStmt : 'else' (SPACE)* (statement)+ ;
 
 whileStmt : 'while' (SPACE)* '(' relationalExpr ')' (SPACE)* (statement)+ ;
 
-expr : unaryExpr | binaryExpr ;
+expr : unaryExpr | binaryExpr | term;
 
-unaryExpr : UOP ('(')* (UOP)* term (')')* ;
+unaryExpr : UOP term
+  | UOP '(' term ')'
+  ;
 
-binaryExpr : term (SPACE)* BINOP (SPACE)* term ;
+binaryExpr : binaryExpr BINOP binaryExpr
+  | '(' binaryExpr BINOP binaryExpr ')'
+  | '(' term (SPACE)* BINOP (SPACE)* term ')' 
+  | term (SPACE)* BINOP (SPACE)* term
+  ;
 
-relationalExpr : expr (SPACE)* COP (SPACE)* expr ;
+relationalExpr : expr (SPACE)* COP (SPACE)* expr
+  | '(' expr (SPACE)* COP (SPACE)* expr ')' ;
 
 term : NAME | NUMBER | funcCall;
 
-statement : varDec 
-  | NAME (SPACE)* '=' (SPACE)* (binaryExpr | unaryExpr) ';' 
-  | 'return' (term|binaryExpr|unaryExpr) ';' 
-  | ifStmt (elseStmt)? 
-  | whileStmt
-  | '{' (statement)+ '}' 
+statement : (SPACE)* varDec 
+  | (SPACE)* NAME (SPACE)* '=' (SPACE)* expr ';' 
+  | (SPACE)* 'return' (SPACE)* '(' expr ')' ';'
+  | (SPACE)* 'return' (SPACE)* (expr) ';'
+  | (SPACE)*  ifStmt (elseStmt)? 
+  | (SPACE)*  whileStmt
+  | (SPACE)* '{' (statement)+ '}'
+  | (SPACE)* funcCall ';'
   ;
 
 
