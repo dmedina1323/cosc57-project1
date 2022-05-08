@@ -1,0 +1,10 @@
+Running my solution should be standard but just in case:
+  make
+  java miniC [inputfile].c
+
+To my knowledge, I did not support any features beyond those that were required
+I did not make any edits to the provided ast so I am not including it in the tarball
+
+Note on commenting: I made a genuine effort to thoroughly comment all files, but you'll notice that miniC.g4
+is a bit sparse. I'm hoping that the tags/labels I added to each rule, as well as clear token names
+and rules will clarify any questions that might come from the lack of comments.

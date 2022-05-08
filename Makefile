@@ -1,12 +1,12 @@
-ANTLR4=java -jar /thayerfs/courses/22spring/cosc057/workspace/antlr-4.9.3-complete.jar
+ANTLR4=java -jar /thayerfs/courses/22spring/cosc057/workspace/antlr-4.9.3-complete.jar -visitor
 
-all: Frontend.class
+all: miniC.class
 
-FrontendParser.java: Frontend.g4
-	$(ANTLR4) Frontend.g4
+miniCParser.java: miniC.g4
+	$(ANTLR4) miniC.g4
 
-Frontend.class: FrontendParser.java Frontend.java FrontendWalker.java
-	javac Frontend*.java
+miniC.class: miniCParser.java miniCLexer.java miniCListener.java miniC.java miniCVisitor.java
+	javac *.java
 
 clean: 
-	rm -f F*.class F*tokens F*interp F*class Frontend*Listener.java FrontendParser.java FrontendLexer.java
+	rm -f m*.class m*tokens m*interp m*class miniC*Listener.java miniCParser.java miniCLexer.java miniC*Visitor.java *Visitor.class AST*.class
